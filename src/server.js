@@ -13,14 +13,40 @@ const app = express();
 // Database connection
 connectDB();
 
+// CORS configuration
+const allowedOrigins = [
+  // Local development
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5000',
+  'http://127.0.0.1:5173',
+  // Production domains
+  /\.railway\.app$/,
+  /\.onrender\.com$/,
+  /\.vercel\.app$/,
+];
+
 // Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5000',
-    /\.railway\.app$/,  // Allow all Railway domains
-    /\.onrender\.com$/,  // Allow all Render domains
-  ],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list
+    const isAllowed = allowedOrigins.some(pattern => {
+      if (typeof pattern === 'string') return origin === pattern;
+      return pattern.test(origin);
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
