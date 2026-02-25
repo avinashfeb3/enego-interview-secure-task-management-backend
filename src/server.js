@@ -26,6 +26,8 @@ const allowedOrigins = [
   /\.railway\.app$/,
   /\.onrender\.com$/,
   /\.vercel\.app$/,
+  /\.netlify\.app$/,  // Netlify deployment
+  'https://securetaskmanagement.netlify.app',  // Specific Netlify URL
 ];
 
 // Middleware
