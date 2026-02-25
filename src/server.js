@@ -19,6 +19,7 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:5000',
     /\.railway\.app$/,  // Allow all Railway domains
+    /\.onrender\.com$/,  // Allow all Render domains
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
